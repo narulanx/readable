@@ -6,8 +6,21 @@ import {
   DELETE_POST,
   ADD_COMMENT,
   EDIT_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  SELECT_CATEGORY
 } from '../actions'
+
+function category(state = {}, action) {
+  switch(action.type) {
+    case SELECT_CATEGORY :
+      return {
+        ...state,
+        ...action.category
+      }
+    default :
+      return state
+  }
+}
 
 function post(state = {}, action) {
   switch(action.type) {
@@ -75,6 +88,7 @@ function comment(state = {}, action) {
 }
 
 export default combineReducers({
+  category,
   post,
   comment
 })

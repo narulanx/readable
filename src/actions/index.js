@@ -4,6 +4,14 @@ export const DELETE_POST = 'DELETE_POST'
 export const ADD_COMMENT = 'ADD_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
+export const SELECT_CATEGORY = 'SELECT_CATEGORY'
+
+export function selectCategory({ category }) {
+    return {
+        type: SELECT_CATEGORY,
+        category
+    }
+}
 
 export function addPost({ category, title, body, author, timestamp, voteScore }) {
     return {

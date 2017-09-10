@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import '../App.css';
 import * as ReadableAPI from '../utils/ReadableAPI'
-import Foundation from 'react-foundation';
+import { capitalize } from '../utils/helpers'
+import { Navbar, Nav, NavItem, Grid, Row, Col, Button } from 'react-bootstrap';
+import { connect } from 'react-redux'
 
 class App extends Component {
 
@@ -17,20 +18,56 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.categories);
+    const { categories } = this.state
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Readable</h2>
-        </div>
-        <div className="row">
-          <div className="column small-4"></div>
-          <div className="column small-8"></div>
-        </div>
+        <Navbar>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="#">Readable</a>
+            </Navbar.Brand>
+          </Navbar.Header>
+          <Nav>
+            <NavItem eventKey={1} href="#">Home</NavItem>
+          </Nav>
+        </Navbar>
+        <Grid>
+          <Row className="show-grid">
+            <Col xs={4}>
+              <h3>Categories</h3>
+              <div className="category-buttons">
+                { categories.map((category) => (
+                  <Button key={category.name} bsStyle="primary" bsSize="large" block>{capitalize(category.name)}</Button>
+                ))}
+              </div>
+            </Col>
+            <Col xs={8}>
+              <h3>Posts</h3>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
 }
 
-export default App;
+function mapStateToProps ({ category, post, comment }) {
+  return {
+    /*calendar: dayOrder.map((day) => ({
+      day,
+      meals: Object.keys(calendar[day]).reduce((meals, meal) => {
+        meals[meal] = calendar[day][meal] ? food[calendar[day][meal]] : null
+        return meals;
+      }, {})
+    }))*/
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    // selectRecipe: (data) => dispatch(addRecipe(data)),
+    // remove: (data) => dispatch(removeFromCalendar(data))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
