@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 
 import {
+  LOAD_POSTS,
   ADD_POST,
   EDIT_POST,
   DELETE_POST,
@@ -22,8 +23,10 @@ function category(state = {}, action) {
   }
 }
 
-function post(state = {}, action) {
+function post(state = [], action) {
   switch(action.type) {
+    case LOAD_POSTS: 
+      return Object.assign([], action.posts)
     case ADD_POST : 
       const { category, title, body, author, timestamp, voteScore } = action
       return [
