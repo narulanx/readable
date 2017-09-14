@@ -3,7 +3,7 @@ import '../App.css';
 import { loadPost } from '../actions'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { capitalize, getSocialDate } from '../utils/helpers'
-import { Navbar, Nav, NavItem, Grid, Row, Col, Button, Well} from 'react-bootstrap';
+import { Navbar, Nav, NavItem, Grid, Row, Col, Button, Well, Modal} from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import ArrowUp from 'react-icons/lib/fa/angle-up'
@@ -14,7 +14,8 @@ class App extends Component {
 
   state = {
     categories: [],
-    posts: []
+    posts: [],
+    showAddPost: false
   }
 
   componentDidMount() {
@@ -23,7 +24,9 @@ class App extends Component {
     })
 
     ReadableAPI.getAllPosts().then((data) => { 
-      this.props.loadPosts(data.sort(this.sortByVoteScore)) 
+      this.props.loadPosts(
+        data.filter((post) => (post.deleted === false)).sort(this.sortByVoteScore)
+      ) 
     })
   }
 
@@ -35,12 +38,20 @@ class App extends Component {
     return a.timestamp < b.timestamp
   }
 
-  filter = function(props, event) {
+  filter = function(event) {
     if (event.target.value === 'votescore') {
-      props.loadPosts(props.post.sort(this.sortByVoteScore)) 
+      this.props.loadPosts(this.props.post.sort(this.sortByVoteScore)) 
     } else if (event.target.value === 'timestamp') {
-      props.loadPosts(props.post.sort(this.sortByTimestamp)) 
+      this.props.loadPosts(this.props.post.sort(this.sortByTimestamp)) 
     }
+  }
+
+  addPostOpen = function() {
+    this.setState({ showAddPost: true })
+  }
+
+  addPostClose = function() {
+    this.setState({ showAddPost: false })
   }
 
   render() {
@@ -60,6 +71,7 @@ class App extends Component {
           </Navbar.Header>
           <Nav>
             <NavItem eventKey={1} href="#">Home</NavItem>
+            <NavItem eventKey={2} onClick={() => this.addPostOpen()}>Add Post</NavItem>
           </Nav>
         </Navbar>
         <Grid>
@@ -76,10 +88,10 @@ class App extends Component {
               <Row className="show-grid">
                 <Col xs={9}><h4 className="float-left">Posts</h4></Col>
                 <Col xs={3}>
-                  <span>Filter By  </span>
+                  <span>Sort By  </span>
                   <select 
                     id="filterBy"
-                    onChange={(e) => (this.filter(this.props, e))} 
+                    onChange={(e) => this.filter(e)} 
                     defaultValue={options[0].value}>
                     {options.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -100,7 +112,9 @@ class App extends Component {
                         <div><Link className="float-left" to="/post">{p.title}</Link></div>
                         <div><p className="float-left">{p.body}</p></div>
                         <div><p className="float-right"><User size={20} />  {p.author}</p></div>
-                        <div><p className="float-right">Posted on {getSocialDate(new Date(p.timestamp))}</p></div>
+                        <div>
+                          <p className="float-left"><em>{capitalize(p.category)}</em></p>
+                          <p className="float-right">Posted on {getSocialDate(new Date(p.timestamp))}</p></div>
                       </Col>
                     </Row>
                   </Well>
@@ -109,12 +123,37 @@ class App extends Component {
             </Col>
           </Row>
         </Grid>
+        <Modal show={this.state.showAddPost} onHide={() => this.addPostClose()}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Post</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <h4>Text in a modal</h4>
+            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+
+            <hr />
+
+            <h4>Overflowing text to show scroll behavior</h4>
+            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.addPostClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
 }
 
-function mapStateToProps ({ category, post, comment }) {
+function mapStateToProps ({ post }) {
   return {
     post: post
     /*calendar: dayOrder.map((day) => ({
