@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import '../App.css'
-import { loadPost } from '../actions'
+import { loadPost, loadCategories, addPost } from '../actions'
 import Categories from './Categories'
 import PostList from './PostList'
 import AddPost from './AddPost'
@@ -11,14 +11,12 @@ import { connect } from 'react-redux'
 class App extends Component {
 
   state = {
-    categories: [],
-    posts: [],
     showAddPost: false
   }
 
   componentDidMount() {
     ReadableAPI.getCategories().then((categories) => {
-      this.setState({ categories })
+      this.props.loadCategories(categories)
     })
 
     ReadableAPI.getAllPosts().then((data) => { 
@@ -45,8 +43,7 @@ class App extends Component {
   }
 
   render() {
-    const { categories } = this.state
-    const { post } = this.props
+    const { categories, post, addPost } = this.props
     const options = [
       { value: 'votescore', label: 'Vote Score' },
       { value: 'timestamp', label: 'TimeStamp' }]
@@ -90,22 +87,27 @@ class App extends Component {
         </Grid>
         <AddPost 
           showAddPost={this.state.showAddPost}
+          categories={categories}
           addPostClose={() => this.setState({ showAddPost: false })}
+          addPost={ (selectedPost) => { addPost(selectedPost) }}
         />
       </div>
     );
   }
 }
 
-function mapStateToProps ({ post }) {
+function mapStateToProps ({ categories, post }) {
   return {
+    categories: categories,
     post: post
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    loadPosts: (data) => dispatch(loadPost(data))
+    loadCategories: (categories) => dispatch(loadCategories(categories)),
+    loadPosts: (data) => dispatch(loadPost(data)),
+    addPost: (post) => dispatch(addPost(post))
   }
 }
 
