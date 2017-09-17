@@ -35,6 +35,14 @@ class App extends Component {
     this.setState({ showAddPost: true })
   }
 
+  categoryClick = function(category) {
+    ReadableAPI.getCategoryPosts(category).then((data) => {
+      this.props.loadPosts(
+        data.filter((post) => (post.deleted === false))
+      ) 
+    })
+  }
+
   render() {
     const { categories, post, addPost } = this.props
     const options = [
@@ -57,7 +65,7 @@ class App extends Component {
         <Grid>
           <Row className="show-grid">
             <Col xs={4}>
-              <Categories categories={categories}/>
+              <Categories categories={categories} onClickHandle={(category) => this.categoryClick(category)}/>
             </Col>
             <Col xs={8}>
               <Row className="show-grid">

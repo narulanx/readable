@@ -22,7 +22,6 @@ export const getAllPosts = () =>
 export const getCategoryPosts = (category) =>
   fetch(`${api}/${category}/posts`, { headers })
     .then(res => res.json())
-    .then(data => data.contact)
 
 export const createPost = (post) =>
   fetch(`${api}/posts`, {
