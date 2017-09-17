@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { guid } from '../utils/helpers'
 
 import {
   LOAD_CATEGORIES,
@@ -21,12 +20,7 @@ function post(state = [], action) {
     case LOAD_POSTS: 
       return Object.assign([], action.posts)
     case ADD_POST:
-      let post = action.post
-      post.id = guid()
-      post.timestamp = new Date()
-      post.voteScore = 0
-      post.deleted = false
-      return [...state, post]
+      return [...state, action.post]
     default:
       return state
   }

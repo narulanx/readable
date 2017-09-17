@@ -11,7 +11,8 @@ import { connect } from 'react-redux'
 class App extends Component {
 
   state = {
-    showAddPost: false
+    showAddPost: false,
+    sortMethod: 'votescore'
   }
 
   componentDidMount() {
@@ -21,21 +22,13 @@ class App extends Component {
 
     ReadableAPI.getAllPosts().then((data) => { 
       this.props.loadPosts(
-        data.filter((post) => (post.deleted === false)).sort(this.sortByVoteScore)
+        data.filter((post) => (post.deleted === false))
       ) 
     })
   }
 
-  filter = function(event) {
-    if (event.target.value === 'votescore') {
-      this.props.loadPosts(this.props.post.sort(function(a, b) {
-        return a.voteScore < b.voteScore
-      })) 
-    } else if (event.target.value === 'timestamp') {
-      this.props.loadPosts(this.props.post.sort(function(a, b) {
-        return a.timestamp < b.timestamp
-      })) 
-    }
+  changeSort = function(event) {
+    this.setState({sortMethod: event.target.value})
   }
 
   addPostOpen = function() {
@@ -73,15 +66,14 @@ class App extends Component {
                   <span>Sort By  </span>
                   <select 
                     id="filterBy"
-                    onChange={(e) => this.filter(e)} 
-                    defaultValue={options[0].value}>
+                    onChange={(e) => this.changeSort(e)}>
                     {options.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
                 </Col>
               </Row>
-              <PostList post={post} />
+              <PostList post={post} sortMethod={this.state.sortMethod} />
             </Col>
           </Row>
         </Grid>

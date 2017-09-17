@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
 import { capitalize } from '../utils/helpers'
+import * as ReadableAPI from '../utils/ReadableAPI'
+import { guid } from '../utils/helpers'
 
 class AddPost extends React.Component {
   state = {
@@ -46,8 +48,13 @@ class AddPost extends React.Component {
       }
     })
     if (valid) {
-      this.props.addPost(this.state.values)
-      this.props.addPostClose()
+      const post = this.state.values
+      post.id = guid()
+      post.timestamp = Math.floor(Date.now())
+      ReadableAPI.createPost(post).then((data) => {
+        this.props.addPost(data)
+        this.props.addPostClose()
+      })
     }
   }
 

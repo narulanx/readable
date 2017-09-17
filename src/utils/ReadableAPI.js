@@ -24,12 +24,12 @@ export const getCategoryPosts = (category) =>
     .then(res => res.json())
     .then(data => data.contact)
 
-export const create = (body) =>
-  fetch(`${api}/contacts`, {
+export const createPost = (post) =>
+  fetch(`${api}/posts`, {
     method: 'POST',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(post)
   }).then(res => res.json())
