@@ -1,17 +1,14 @@
 import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
+import { updatePost } from '../actions'
 import { capitalize } from '../utils/helpers'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { guid } from '../utils/helpers'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 class AddPost extends React.Component {
   state = {
-    values: {
-      title: "",
-      category: "",
-      body: "",
-      author:""
-    },
     validations: {
       title: null,
       category: null,
@@ -21,9 +18,9 @@ class AddPost extends React.Component {
   }
 
   handleChange(e){
-    const values = this.state.values
-    values[e.target.name] = e.target.value
-    this.setState({ values })
+    const addEditPost = this.props.addEditPost
+    addEditPost[e.target.name] = e.target.value
+    this.props.updatePost(e.target.name, e.target.value)
     if (e.target.value.trim() !== '') {
       const validations = this.state.validations
       validations[e.target.name] = null
@@ -40,15 +37,16 @@ class AddPost extends React.Component {
   submitPost(e) {
     e.preventDefault()
     let valid = true
-    const entries = Object.keys(this.state.values);
+    let addEditPost = this.props.addEditPost
+    const entries = Object.keys(addEditPost);
     entries.forEach((entry) => {
-      if (this.state.values[entry].trim() === '') {
+      if (addEditPost[entry].trim() === '') {
         this.setValidation(entry)
         valid = false
       }
     })
     if (valid) {
-      const post = this.state.values
+      const post = this.props.addEditPost
       post.id = guid()
       post.timestamp = Math.floor(Date.now())
       ReadableAPI.createPost(post).then((data) => {
@@ -62,18 +60,18 @@ class AddPost extends React.Component {
     const { showAddPost, categories, addPostClose } = this.props
     return (
       <Modal show={showAddPost} onHide={() => addPostClose()}>
-        <form onSubmit={(e) => {this.submitPost(e)}}>
+        <form onSubmit={(e) => this.submitPost(e)}>
           <Modal.Header closeButton>
-          <Modal.Title>Add Post</Modal.Title>
+            <Modal.Title>Add Post</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <FormGroup controlId="postTitle" validationState={this.state.validations.title}>
-              <FormControl type="text" placeholder="Title" value={this.state.values.title} 
+              <FormControl type="text" placeholder="Title" value={this.props.addEditPost.title} 
                 name="title" onChange={(e) => this.handleChange(e)} />
             </FormGroup>
             <FormGroup controlId="postCategory" validationState={this.state.validations.category}>
               <FormControl componentClass="select" name="category" 
-                value={this.state.values.category} onChange={(e) => this.handleChange(e)} >
+                value={this.props.addEditPost.category} onChange={(e) => this.handleChange(e)} >
                 <option value=""></option>
                 {categories.map((cat, i) => (
                   <option key={i} value={cat.name}>{capitalize(cat.name)}</option>
@@ -81,16 +79,16 @@ class AddPost extends React.Component {
               </FormControl>
             </FormGroup>
             <FormGroup controlId="postBody" validationState={this.state.validations.body}>
-              <FormControl componentClass="textarea" placeholder="Post" value={this.state.values.body}
+              <FormControl componentClass="textarea" placeholder="Post" value={this.props.addEditPost.body}
                 name="body" onChange={(e) => this.handleChange(e)}  />
             </FormGroup>
             <FormGroup controlId="postAuthor" validationState={this.state.validations.author}>
-              <FormControl type="text" placeholder="Author" value={this.state.values.author} 
+              <FormControl type="text" placeholder="Author" value={this.props.addEditPost.author} 
                 name="author" onChange={(e) => this.handleChange(e)} />
             </FormGroup>
           </Modal.Body>
           <Modal.Footer>
-          <Button type="submit">Post</Button>
+            <Button type="submit">Post</Button>
           </Modal.Footer>
         </form>
       </Modal>
@@ -98,4 +96,16 @@ class AddPost extends React.Component {
   }
 }
 
-export default AddPost
+function mapStateToProps ({ addEditPost }) {
+  return {
+    addEditPost: addEditPost
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    updatePost: (name, value) => dispatch(updatePost(name, value))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddPost))

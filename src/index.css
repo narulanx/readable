@@ -16,3 +16,12 @@ body {
 .float-right {
   float: right;
 }
+
+.vote {
+  margin-right: auto;
+  margin-left: 11px;
+}
+
+.post .panel-heading {
+  font-size: 2rem;
+}
