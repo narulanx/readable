@@ -5,7 +5,9 @@ export const SELECT_POST = 'SELECT_POST'
 export const LOAD_COMMENTS = 'LOAD_COMMENTS'
 export const ADD_NEW_POST = 'ADD_NEW_POST'
 export const UPDATE_POST = 'UPDATE_POST'
+export const OPEN_EDIT_POST = 'OPEN_EDIT_POST'
 export const EDIT_POST = 'EDIT_POST'
+export const DELETE_POST = 'DELETE_POST'
 
 export function loadCategories(categories) {
   return {
@@ -58,7 +60,21 @@ export function updatePost(name, value) {
 
 export function openEditPost(post) {
   return {
+    type: OPEN_EDIT_POST,
+    post
+  }
+}
+
+export function editPost(post) {
+  return {
     type: EDIT_POST,
     post
+  }
+}
+
+export function deletePost(id) {
+  return {
+    type: DELETE_POST,
+    id
   }
 }

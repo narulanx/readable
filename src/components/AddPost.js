@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
-import { updatePost } from '../actions'
+import { updatePost, selectPost } from '../actions'
 import { capitalize } from '../utils/helpers'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { guid } from '../utils/helpers'
@@ -46,13 +46,21 @@ class AddPost extends React.Component {
       }
     })
     if (valid) {
-      const post = this.props.addEditPost
-      post.id = guid()
-      post.timestamp = Math.floor(Date.now())
-      ReadableAPI.createPost(post).then((data) => {
-        this.props.addPost(data)
-        this.props.addPostClose()
-      })
+      if (this.props.type === 'add') {
+        const post = this.props.addEditPost
+        post.id = guid()
+        post.timestamp = Math.floor(Date.now())
+        ReadableAPI.createPost(post).then((data) => {
+          this.props.addPost(data)
+          this.props.addPostClose()
+        })
+      } else if (this.props.type === 'edit') {
+        const post = this.props.addEditPost
+        ReadableAPI.editPost(post.id, post).then((data) => {
+          this.props.selectPost(post)
+          this.props.addPostClose()
+        })
+      }
     }
   }
 
@@ -60,7 +68,7 @@ class AddPost extends React.Component {
     const { showAddPost, categories, addPostClose } = this.props
     return (
       <Modal show={showAddPost} onHide={() => addPostClose()}>
-        <form onSubmit={(e) => this.submitPost(e)}>
+        <form onSubmit={(e) => this.submitPost(e)} id={this.props.addEditPost.id}>
           <Modal.Header closeButton>
             <Modal.Title>Add Post</Modal.Title>
           </Modal.Header>
@@ -96,15 +104,17 @@ class AddPost extends React.Component {
   }
 }
 
-function mapStateToProps ({ addEditPost }) {
+function mapStateToProps ({ addEditPost, selectedPost }) {
   return {
-    addEditPost: addEditPost
+    addEditPost: addEditPost,
+    selectedPost: selectedPost
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    updatePost: (name, value) => dispatch(updatePost(name, value))
+    updatePost: (name, value) => dispatch(updatePost(name, value)),
+    selectPost: (selectedPost) => dispatch(selectPost(selectedPost))
   }
 }
 

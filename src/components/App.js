@@ -9,6 +9,7 @@ import * as ReadableAPI from '../utils/ReadableAPI'
 import { Navbar, Nav, NavItem, Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux'
 import { Route, Link, withRouter } from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
 
 class App extends Component {
 
@@ -22,11 +23,15 @@ class App extends Component {
       this.props.loadCategories(categories)
     })
 
+    this.getAllPosts()
+  }
+
+  getAllPosts = function() {
     ReadableAPI.getAllPosts().then((data) => { 
       this.props.loadPosts(
         data.filter((post) => (post.deleted === false))
       ) 
-    })
+    }) 
   }
 
   changeSort = function(event) {
@@ -57,7 +62,7 @@ class App extends Component {
   }
 
   render() {
-    const { categories, post, addPost, selectedPost } = this.props
+    const { categories, post, addPost } = this.props
     const options = [
       { value: 'votescore', label: 'Vote Score' },
       { value: 'timestamp', label: 'TimeStamp' }]
@@ -67,11 +72,11 @@ class App extends Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link to="/">Readable</Link>
+              <Link to="/" onClick={(category) => this.getAllPosts()}>Readable</Link>
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
-            <NavItem eventKey={1} href="#">Home</NavItem>
+            <LinkContainer to="/"><NavItem eventKey={1} onClick={(category) => this.getAllPosts()}>Home</NavItem></LinkContainer>
             <NavItem eventKey={2} onClick={() => this.addPostOpen()}>Add Post</NavItem>
           </Nav>
         </Navbar>
@@ -101,7 +106,7 @@ class App extends Component {
           </Grid>
         )} />
         <Route path="/post" render={() => (
-          <PostDetails selectedPost={selectedPost} />
+          <PostDetails />
         )} />
         <AddPost 
           showAddPost={this.state.showAddPost}
@@ -114,11 +119,10 @@ class App extends Component {
   }
 }
 
-function mapStateToProps ({ categories, post, selectedPost, addEditPost }) {
+function mapStateToProps ({ categories, post, addEditPost }) {
   return {
     categories: categories,
     post: post,
-    selectedPost: selectedPost,
     addEditPost: addEditPost
   }
 }

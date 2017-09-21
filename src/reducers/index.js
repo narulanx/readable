@@ -8,7 +8,9 @@ import {
   LOAD_COMMENTS,
   ADD_NEW_POST,
   UPDATE_POST,
-  EDIT_POST
+  OPEN_EDIT_POST,
+  EDIT_POST,
+  DELETE_POST
 } from '../actions'
 
 function categories(state = [], action) {
@@ -26,6 +28,17 @@ function post(state = [], action) {
       return Object.assign([], action.posts)
     case ADD_POST:
       return [...state, action.post]
+    case EDIT_POST:
+      return state.map((item, index) => {
+        if (item.id === action.post.id) {
+          return action.post
+        }
+        return item
+      })
+    case DELETE_POST:
+      return state.filter((item, index) => {
+        return item.id !== action.id
+      })
     default:
       return state
   }
@@ -65,7 +78,7 @@ function addEditPost(state = addPostValues, action) {
         ...state,
         [action.name]: action.value
       }
-    case EDIT_POST:
+    case OPEN_EDIT_POST:
       return Object.assign({}, action.post)
     default:
       return state
