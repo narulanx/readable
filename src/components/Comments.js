@@ -8,14 +8,32 @@ import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
+import { openAddComment } from '../actions'
+import AddEditComment from './AddEditComment'
 
 class Comments extends React.Component {
+  state = {
+    showAddComment: false
+  }
+
+  addCommentOpen() {
+    this.props.openAddComment()
+    this.setState({ showAddComment: true })
+  }
+
+  addCommentClose() {
+    this.setState({ showAddComment: false })
+  }
+
   render() {
     const { comments } = this.props
-    console.log(comments)
     return(
       <div>
-        <h4>Comments ({ comments.length })</h4>
+        <h4>Comments ({ comments.length }) 
+          <span className="small-text">
+            <button onClick={() => this.addCommentOpen()}><em> Add Comment</em></button>
+          </span>
+        </h4>
         {comments.sort(function(a, b) {
           return a.voteScore < b.voteScore
         }).map((comment) => (
@@ -37,6 +55,7 @@ class Comments extends React.Component {
               </Row>
           </Well>
         ))}
+        <AddEditComment showAddComment={this.state.showAddComment} onCloseComment={() => this.addCommentClose()} />
       </div>
     )
   }
@@ -50,7 +69,7 @@ function mapStateToProps ({ comments }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    
+    openAddComment: (comment) => dispatch(openAddComment(comment))
   }
 }
 

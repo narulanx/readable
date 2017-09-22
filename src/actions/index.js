@@ -8,6 +8,8 @@ export const UPDATE_POST = 'UPDATE_POST'
 export const OPEN_EDIT_POST = 'OPEN_EDIT_POST'
 export const EDIT_POST = 'EDIT_POST'
 export const DELETE_POST = 'DELETE_POST'
+export const ADD_NEW_COMMENT = 'ADD_NEW_COMMENT'
+export const UPDATE_COMMENT = 'UPDATE_COMMENT'
 
 export function loadCategories(categories) {
   return {
@@ -76,5 +78,19 @@ export function deletePost(id) {
   return {
     type: DELETE_POST,
     id
+  }
+}
+
+export function openAddComment(comment) {
+  return {
+    type: ADD_NEW_COMMENT
+  }
+}
+
+export function updateComment(name, value) {
+  return {
+    type: UPDATE_COMMENT,
+    name, 
+    value
   }
 }

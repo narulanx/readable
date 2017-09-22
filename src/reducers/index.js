@@ -10,7 +10,9 @@ import {
   UPDATE_POST,
   OPEN_EDIT_POST,
   EDIT_POST,
-  DELETE_POST
+  DELETE_POST,
+  ADD_NEW_COMMENT,
+  UPDATE_COMMENT
 } from '../actions'
 
 function categories(state = [], action) {
@@ -85,10 +87,30 @@ function addEditPost(state = addPostValues, action) {
   }
 }
 
+const addCommentValues = {
+  body: "",
+  author: ""
+}
+
+function addEditComment(state = addCommentValues, action) {
+  switch (action.type) {
+    case ADD_NEW_COMMENT: 
+      return Object.assign({}, addCommentValues)
+    case UPDATE_COMMENT:
+      return {
+        ...state,
+        [action.name]: action.value
+      }
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   categories,
   post,
   selectedPost,
   comments,
-  addEditPost
+  addEditPost,
+  addEditComment
 })
