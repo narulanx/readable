@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
-import { updatePost, selectPost } from '../actions'
+import { updatePost, selectPost, editPost } from '../actions'
 import { capitalize } from '../utils/helpers'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { guid } from '../utils/helpers'
@@ -57,7 +57,7 @@ class AddPost extends React.Component {
       } else if (this.props.type === 'edit') {
         const post = this.props.addEditPost
         ReadableAPI.editPost(post.id, post).then((data) => {
-          this.props.selectPost(post)
+          this.props.editPost(post)
           this.props.addPostClose()
         })
       }
@@ -114,7 +114,8 @@ function mapStateToProps ({ addEditPost, selectedPost }) {
 function mapDispatchToProps (dispatch) {
   return {
     updatePost: (name, value) => dispatch(updatePost(name, value)),
-    selectPost: (selectedPost) => dispatch(selectPost(selectedPost))
+    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
+    editPost: (post) => dispatch(editPost(post))
   }
 }
 

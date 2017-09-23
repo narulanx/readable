@@ -7,7 +7,7 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
-import { openEditPost, editPost, deletePost } from '../actions'
+import { openEditPost, deletePost } from '../actions'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import AddPost from './AddPost'
@@ -73,7 +73,6 @@ class PostDetails extends React.Component {
           categories={categories}
           addPostClose={() => this.setState({ showAddPost: false })}
           type="edit"
-          editPost={ (selectedPost) => { editPost(selectedPost) }}
         />
       </Grid>
     )
@@ -90,7 +89,6 @@ function mapStateToProps ({ categories, selectedPost }) {
 function mapDispatchToProps (dispatch) {
   return {
     openEditPost: (post) => dispatch(openEditPost(post)),
-    editPost: (post) => dispatch(editPost(post)),
     deletePost: (id) => dispatch(deletePost(id))
   }
 }

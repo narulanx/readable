@@ -105,7 +105,7 @@ class App extends Component {
             </Row>
           </Grid>
         )} />
-        <Route path="/post" render={() => (
+        <Route path="/post/:id" render={() => (
           <PostDetails />
         )} />
         <AddPost 

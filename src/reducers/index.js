@@ -12,7 +12,11 @@ import {
   EDIT_POST,
   DELETE_POST,
   ADD_NEW_COMMENT,
-  UPDATE_COMMENT
+  UPDATE_COMMENT,
+  ADD_COMMENT,
+  OPEN_EDIT_COMMENT,
+  EDIT_COMMENT,
+  DELETE_COMMENT
 } from '../actions'
 
 function categories(state = [], action) {
@@ -50,6 +54,15 @@ function selectedPost(state = {}, action) {
   switch(action.type) {
     case SELECT_POST:
       return Object.assign({}, action.selectedPost)
+    case EDIT_POST:
+      const { title, body, author, category } = action.post
+      return {
+        ...state,
+        'title': title,
+        'body': body,
+        'author': author,
+        'category': category
+      }
     default:
       return state
   }
@@ -59,6 +72,26 @@ function comments(state = [], action) {
   switch(action.type) {
     case LOAD_COMMENTS:
       return Object.assign([], action.comments)
+    case ADD_COMMENT:
+      return [...state, action.comment]
+    case EDIT_COMMENT:
+      const { body, author } = action.comment
+      return state.map((item, index) => {
+        if (item.parentId === action.comment.parentId) {
+          if (item.id === action.comment.id) {
+            return {
+              ...item,
+              'body': body,
+              'author': author
+            }
+          }
+        }
+        return item
+      })
+    case DELETE_COMMENT:
+      return state.filter((item, index) => {
+        return item.id !== action.id
+      })
     default: 
       return state
   }
@@ -101,6 +134,8 @@ function addEditComment(state = addCommentValues, action) {
         ...state,
         [action.name]: action.value
       }
+    case OPEN_EDIT_COMMENT:
+      return Object.assign({}, action.comment)
     default:
       return state
   }

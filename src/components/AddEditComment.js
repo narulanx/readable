@@ -2,6 +2,9 @@ import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { updateComment, addComment, editComment } from '../actions'
+import * as ReadableAPI from '../utils/ReadableAPI'
+import { guid } from '../utils/helpers'
 
 class AddEditComment extends React.Component {
   state = {
@@ -28,35 +31,37 @@ class AddEditComment extends React.Component {
     this.setState({ validations })
   }
 
-  /*submitPost(e) {
+  submitComment(e) {
     e.preventDefault()
     let valid = true
-    let addEditPost = this.props.addEditPost
-    const entries = Object.keys(addEditPost);
+    let addEditComment = this.props.addEditComment
+    const entries = Object.keys(addEditComment);
     entries.forEach((entry) => {
-      if (addEditPost[entry].trim() === '') {
+      if (addEditComment[entry].trim() === '') {
         this.setValidation(entry)
         valid = false
       }
     })
     if (valid) {
       if (this.props.type === 'add') {
-        const post = this.props.addEditPost
-        post.id = guid()
-        post.timestamp = Math.floor(Date.now())
-        ReadableAPI.createPost(post).then((data) => {
-          this.props.addPost(data)
-          this.props.addPostClose()
+        const comment = this.props.addEditComment
+        comment.id = guid()
+        comment.timestamp = Math.floor(Date.now())
+        comment.parentId = this.props.selectedPost.id
+        ReadableAPI.createComment(comment).then((data) => {
+          this.props.addComment(data)
+          this.props.onCloseComment()
         })
       } else if (this.props.type === 'edit') {
-        const post = this.props.addEditPost
-        ReadableAPI.editPost(post.id, post).then((data) => {
-          this.props.selectPost(post)
-          this.props.addPostClose()
+        const comment = this.props.addEditComment
+        comment.timestamp = Math.floor(Date.now())
+        ReadableAPI.editComment(comment.id, comment).then((data) => {
+          this.props.editComment(comment)
+          this.props.onCloseComment()
         })
       }
     }
-  }*/
+  }
 
   render() {
     const { showAddComment, onCloseComment } = this.props
@@ -85,14 +90,18 @@ class AddEditComment extends React.Component {
   }
 }
 
-function mapStateToProps ({ addEditComment }) {
+function mapStateToProps ({ addEditComment, selectedPost }) {
   return {
-    addEditComment
+    addEditComment, 
+    selectedPost
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
+    updateComment: (name, value) => dispatch(updateComment(name, value)),
+    addComment: (comment) => dispatch(addComment(comment)),
+    editComment: (comment) => dispatch(editComment(comment))
   }
 }
 

@@ -10,6 +10,10 @@ export const EDIT_POST = 'EDIT_POST'
 export const DELETE_POST = 'DELETE_POST'
 export const ADD_NEW_COMMENT = 'ADD_NEW_COMMENT'
 export const UPDATE_COMMENT = 'UPDATE_COMMENT'
+export const ADD_COMMENT = 'ADD_COMMENT'
+export const OPEN_EDIT_COMMENT = 'OPEN_EDIT_COMMENT'
+export const EDIT_COMMENT = 'EDIT_COMMENT'
+export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 export function loadCategories(categories) {
   return {
@@ -92,5 +96,33 @@ export function updateComment(name, value) {
     type: UPDATE_COMMENT,
     name, 
     value
+  }
+}
+
+export function addComment(comment) {
+  return {
+    type: ADD_COMMENT,
+    comment
+  }
+}
+
+export function openEditComment(comment) {
+  return {
+    type: OPEN_EDIT_COMMENT,
+    comment
+  }
+}
+
+export function editComment(comment) {
+  return {
+    type: EDIT_COMMENT,
+    comment
+  }
+}
+
+export function deleteComment(id) {
+  return {
+    type: DELETE_COMMENT,
+    id
   }
 }

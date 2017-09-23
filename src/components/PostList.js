@@ -33,7 +33,7 @@ class PostList extends React.Component {
             <ArrowDown size={30}></ArrowDown>
           </Col>
           <Col xs={11} className="column-flex">
-            <div><Link id={p.id} className="float-left" to="/post" onClick={() => onClickSelect(p.id)}>{p.title}</Link></div>
+            <div><Link id={p.id} className="float-left" to={`/post/${p.id}`} onClick={() => onClickSelect(p.id)}>{p.title}</Link></div>
             <div><p className="float-left">{p.body}</p></div>
             <div><p className="float-right"><User size={20} />  {p.author}</p></div>
             <div>
