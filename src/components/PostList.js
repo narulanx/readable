@@ -1,10 +1,13 @@
 import React from 'react'
 import { Row, Col, Well } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { capitalize, getSocialDate } from '../utils/helpers'
 import ArrowUp from 'react-icons/lib/fa/angle-up'
 import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
+import { connect } from 'react-redux'
+import * as ReadableAPI from '../utils/ReadableAPI'
+import { selectPost, loadComments } from '../actions'
 
 class PostList extends React.Component {
   sortPost = function(post, sortMethod) {
@@ -20,7 +23,7 @@ class PostList extends React.Component {
   }
 
   render() {
-    let { post, sortMethod, onClickSelect } = this.props
+    let { post, sortMethod } = this.props
     this.sortPost(post, sortMethod)
     return (
       <div>
@@ -29,11 +32,13 @@ class PostList extends React.Component {
         <Row className="show-grid">
           <Col xs={1}>
             <ArrowUp size={30}></ArrowUp>
-            <span>{p.voteScore}</span>
+            <span className="vote">{p.voteScore}</span>
             <ArrowDown size={30}></ArrowDown>
           </Col>
           <Col xs={11} className="column-flex">
-            <div><Link id={p.id} className="float-left" to={`/post/${p.id}`} onClick={() => onClickSelect(p.id)}>{p.title}</Link></div>
+            <div><Link id={p.id} 
+              className="float-left" 
+              to={`/post/${p.id}`}>{p.title}</Link></div>
             <div><p className="float-left">{p.body}</p></div>
             <div><p className="float-right"><User size={20} />  {p.author}</p></div>
             <div>
@@ -49,4 +54,17 @@ class PostList extends React.Component {
   }
 }
 
-export default PostList
+function mapStateToProps ({ post }) {
+  return {
+    post
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
+    loadComments: (comments) => dispatch(loadComments(comments))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))

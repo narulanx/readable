@@ -7,10 +7,9 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
-import { openEditPost, deletePost } from '../actions'
+import { openEditPost, deletePost, selectPost, loadComments } from '../actions'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import AddPost from './AddPost'
+import { Link, withRouter } from 'react-router-dom'
 import * as ReadableAPI from '../utils/ReadableAPI'
 
 class PostDetails extends React.Component {
@@ -18,10 +17,13 @@ class PostDetails extends React.Component {
     showAddPost: false
   }
 
-  editPostOpen = function() {
-    const {id, title, category, body, author} = this.props.selectedPost
-    this.props.openEditPost({ id, title, category, body, author })
-    this.setState({ showAddPost: true })
+  componentDidMount() {
+    ReadableAPI.getPostDetails(this.props.postId).then((data) => {
+      this.props.selectPost(data) 
+    })
+    ReadableAPI.getComments(this.props.postId).then((data) => {
+      this.props.loadComments(data) 
+    })
   }
 
   deletePost = function() {
@@ -35,7 +37,7 @@ class PostDetails extends React.Component {
   }
 
   render() {
-    const { categories, selectedPost } = this.props
+    const { selectedPost } = this.props
     return(
       <Grid>
         <Row className="show-grid">
@@ -52,7 +54,7 @@ class PostDetails extends React.Component {
                     <p>
                       <span className="float-left">{selectedPost.body}</span>
                       <span className="float-right">
-                        <a onClick={() => this.editPostOpen()}><Edit size={20}></Edit></a>
+                        <Link to={`/post/${selectedPost.id}/edit`}><Edit size={20}></Edit></Link>
                         <a onClick={() => this.deletePost()}><Trash size={20}></Trash></a>
                       </span>
                     </p>
@@ -68,12 +70,6 @@ class PostDetails extends React.Component {
           </Col>
         </Row>
         <Comments />
-        <AddPost 
-          showAddPost={this.state.showAddPost}
-          categories={categories}
-          addPostClose={() => this.setState({ showAddPost: false })}
-          type="edit"
-        />
       </Grid>
     )
   }
@@ -89,7 +85,9 @@ function mapStateToProps ({ categories, selectedPost }) {
 function mapDispatchToProps (dispatch) {
   return {
     openEditPost: (post) => dispatch(openEditPost(post)),
-    deletePost: (id) => dispatch(deletePost(id))
+    deletePost: (id) => dispatch(deletePost(id)),
+    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
+    loadComments: (comments) => dispatch(loadComments(comments))
   }
 }
 
