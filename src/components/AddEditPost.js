@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, FormGroup, FormControl, Grid} from 'react-bootstrap'
-import { updatePost, selectPost, editPost, addPost, loadCategories, openEditPost } from '../actions'
+import { updatePost, editPost, addPost, loadCategories, openEditPost } from '../actions'
 import { capitalize } from '../utils/helpers'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { guid } from '../utils/helpers'
@@ -112,10 +112,9 @@ class AddEditPost extends React.Component {
   }
 }
 
-function mapStateToProps ({ addEditPost, selectedPost, categories }) {
+function mapStateToProps ({ addEditPost, categories }) {
   return {
     addEditPost: addEditPost,
-    selectedPost: selectedPost,
     categories: categories
   }
 }
@@ -123,7 +122,6 @@ function mapStateToProps ({ addEditPost, selectedPost, categories }) {
 function mapDispatchToProps (dispatch) {
   return {
     updatePost: (name, value) => dispatch(updatePost(name, value)),
-    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
     editPost: (post) => dispatch(editPost(post)),
     addPost: (post) => dispatch(addPost(post)),
     openEditPost: (post) => dispatch(openEditPost(post)),

@@ -6,8 +6,6 @@ import ArrowUp from 'react-icons/lib/fa/angle-up'
 import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import { connect } from 'react-redux'
-import * as ReadableAPI from '../utils/ReadableAPI'
-import { selectPost, loadComments } from '../actions'
 
 class PostList extends React.Component {
   sortPost = function(post, sortMethod) {
@@ -60,11 +58,4 @@ function mapStateToProps ({ post }) {
   }
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
-    loadComments: (comments) => dispatch(loadComments(comments))
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))
+export default withRouter(connect(mapStateToProps, null)(PostList))

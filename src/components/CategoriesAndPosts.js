@@ -5,7 +5,7 @@ import Categories from './Categories'
 import PostList from './PostList'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { loadPost, loadCategories, addPost, selectPost, loadComments } from '../actions'
+import { loadCategories } from '../actions'
 
 class CategoriesAndPosts extends Component {
   state = {
@@ -66,11 +66,7 @@ function mapStateToProps ({ categories }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    loadCategories: (categories) => dispatch(loadCategories(categories)),
-    loadPosts: (data) => dispatch(loadPost(data)),
-    addPost: (post) => dispatch(addPost(post)),
-    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
-    loadComments: (comments) => dispatch(loadComments(comments))
+    loadCategories: (categories) => dispatch(loadCategories(categories))
   }
 }
 

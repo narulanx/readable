@@ -16,13 +16,13 @@ class Header extends Component {
     return (
       <Navbar>
         <Navbar.Header>
-        <Navbar.Brand>
+          <Navbar.Brand>
             <Link to="/" onClick={(category) => this.props.getAllPosts()}>Readable</Link>
-        </Navbar.Brand>
+          </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-        <LinkContainer to="/"><NavItem eventKey={1} onClick={(category) => this.getAllPosts()}>Home</NavItem></LinkContainer>
-        <NavItem eventKey={2} onClick={() => this.addPostOpen()}>Add Post</NavItem>
+          <LinkContainer to="/"><NavItem eventKey={1} onClick={(category) => this.getAllPosts()}>Home</NavItem></LinkContainer>
+          <NavItem eventKey={2} onClick={() => this.addPostOpen()}>Add Post</NavItem>
         </Nav>
     </Navbar>
     );

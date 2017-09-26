@@ -7,7 +7,7 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
-import { openEditPost, deletePost, selectPost, loadComments } from '../actions'
+import { deletePost, selectPost, loadComments } from '../actions'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import * as ReadableAPI from '../utils/ReadableAPI'
@@ -55,7 +55,7 @@ class PostDetails extends React.Component {
                       <span className="float-left">{selectedPost.body}</span>
                       <span className="float-right">
                         <Link to={`/post/${selectedPost.id}/edit`}><Edit size={20}></Edit></Link>
-                        <a onClick={() => this.deletePost()}><Trash size={20}></Trash></a>
+                        <Link to='' onClick={() => this.deletePost()}><Trash size={20}></Trash></Link>
                       </span>
                     </p>
                   </div>
@@ -75,16 +75,14 @@ class PostDetails extends React.Component {
   }
 }
 
-function mapStateToProps ({ categories, selectedPost }) {
+function mapStateToProps ({ selectedPost }) {
   return {
-    categories: categories,
-    selectedPost: selectedPost
+    selectedPost
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    openEditPost: (post) => dispatch(openEditPost(post)),
     deletePost: (id) => dispatch(deletePost(id)),
     selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
     loadComments: (comments) => dispatch(loadComments(comments))
