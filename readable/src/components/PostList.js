@@ -6,6 +6,8 @@ import ArrowUp from 'react-icons/lib/fa/angle-up'
 import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import { connect } from 'react-redux'
+import * as ReadableAPI from '../utils/ReadableAPI'
+import { updatePostVote } from '../actions'
 
 class PostList extends React.Component {
   sortPost = function(post, sortMethod) {
@@ -20,6 +22,13 @@ class PostList extends React.Component {
     }
   }
 
+  updateVoteScore = function(e, id, option) {
+    e.preventDefault()
+    ReadableAPI.updatePostVote(id, option).then(() => {
+      this.props.updatePostVote(id, option)
+    })
+  }
+
   render() {
     let { post, sortMethod } = this.props
     this.sortPost(post, sortMethod)
@@ -29,9 +38,13 @@ class PostList extends React.Component {
         <Well key={p.id} bsSize="large">
         <Row className="show-grid">
           <Col xs={1}>
-            <ArrowUp size={30}></ArrowUp>
+            <Link to='' onClick={(e) => this.updateVoteScore(e, p.id, 'upVote')}>
+              <ArrowUp size={30}></ArrowUp>
+            </Link>
             <span className="vote">{p.voteScore}</span>
-            <ArrowDown size={30}></ArrowDown>
+            <Link to='' onClick={(e) => this.updateVoteScore(e, p.id, 'downVote')}>
+              <ArrowDown size={30}></ArrowDown>
+            </Link>
           </Col>
           <Col xs={11} className="column-flex">
             <div><Link id={p.id} 
@@ -58,4 +71,10 @@ function mapStateToProps ({ post }) {
   }
 }
 
-export default withRouter(connect(mapStateToProps, null)(PostList))
+function mapDispatchToProps (dispatch) {
+  return {
+    updatePostVote: (id, option) => dispatch(updatePostVote(id, option))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))

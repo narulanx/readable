@@ -16,7 +16,9 @@ import {
   ADD_COMMENT,
   OPEN_EDIT_COMMENT,
   EDIT_COMMENT,
-  DELETE_COMMENT
+  DELETE_COMMENT,
+  UPDATE_POST_VOTE,
+  UPDATE_COMMENT_VOTE
 } from '../actions'
 
 function categories(state = [], action) {
@@ -45,6 +47,17 @@ function post(state = [], action) {
       return state.filter((item, index) => {
         return item.id !== action.id
       })
+    case UPDATE_POST_VOTE:
+      return state.map((item, index) => {
+        if (item.id === action.id) {
+          let voteScore = action.option === 'upVote' ? item.voteScore + 1 : item.voteScore - 1
+          return {
+            ...item,
+            'voteScore': voteScore
+          }
+        }
+        return item
+      })
     default:
       return state
   }
@@ -62,6 +75,12 @@ function selectedPost(state = {}, action) {
         'body': body,
         'author': author,
         'category': category
+      }
+    case UPDATE_POST_VOTE:
+      let voteScore = action.option === 'upVote' ? state.voteScore + 1 : state.voteScore - 1
+      return {
+        ...state,
+        'voteScore': voteScore
       }
     default:
       return state
@@ -91,6 +110,17 @@ function comments(state = [], action) {
     case DELETE_COMMENT:
       return state.filter((item, index) => {
         return item.id !== action.id
+      })
+    case UPDATE_COMMENT_VOTE:
+      return state.map((item, index) => {
+        if (item.id === action.id) {
+          let voteScore = action.option === 'upVote' ? item.voteScore + 1 : item.voteScore - 1
+          return {
+            ...item,
+            'voteScore': voteScore
+          }
+        }
+        return item
       })
     default: 
       return state

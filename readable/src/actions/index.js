@@ -14,6 +14,8 @@ export const ADD_COMMENT = 'ADD_COMMENT'
 export const OPEN_EDIT_COMMENT = 'OPEN_EDIT_COMMENT'
 export const EDIT_COMMENT = 'EDIT_COMMENT'
 export const DELETE_COMMENT = 'DELETE_COMMENT'
+export const UPDATE_POST_VOTE = 'UPDATE_POST_VOTE'
+export const UPDATE_COMMENT_VOTE = 'UPDATE_COMMENT_VOTE'
 
 // Action to load categories
 export function loadCategories(categories) {
@@ -140,5 +142,23 @@ export function deleteComment(id) {
   return {
     type: DELETE_COMMENT,
     id
+  }
+}
+
+//Action to update the votescore for posts
+export function updatePostVote(id, option) {
+  return {
+    type: UPDATE_POST_VOTE,
+    id,
+    option
+  }
+}
+
+//Action to update the votescore for comments
+export function updateCommentVote(id, option) {
+  return {
+    type: UPDATE_COMMENT_VOTE,
+    id,
+    option
   }
 }

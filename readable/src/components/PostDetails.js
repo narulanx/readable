@@ -7,7 +7,7 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
-import { deletePost, selectPost, loadComments } from '../actions'
+import { deletePost, selectPost, loadComments, updatePostVote } from '../actions'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import * as ReadableAPI from '../utils/ReadableAPI'
@@ -36,6 +36,13 @@ class PostDetails extends React.Component {
     }
   }
 
+  updateVoteScore = function(e, id, option) {
+    e.preventDefault()
+    ReadableAPI.updatePostVote(id, option).then(() => {
+      this.props.updatePostVote(id, option)
+    })
+  }
+
   render() {
     const { selectedPost } = this.props
     return(
@@ -45,9 +52,13 @@ class PostDetails extends React.Component {
             <Panel header={selectedPost.title} bsStyle="primary" className="post">
               <Row className="show-grid">
                 <Col xs={1} className="column-flex">
-                  <ArrowUp size={30}></ArrowUp>
+                  <Link to='' onClick={(e) => this.updateVoteScore(e, selectedPost.id, 'upVote')}>
+                    <ArrowUp size={30}></ArrowUp>
+                  </Link>
                   <span className="vote">{selectedPost.voteScore}</span>
-                  <ArrowDown size={30}></ArrowDown>
+                  <Link to='' onClick={(e) => this.updateVoteScore(e, selectedPost.id, 'downVote')}>
+                    <ArrowDown size={30}></ArrowDown>
+                  </Link>
                 </Col>
                 <Col xs={11} className="column-flex">
                   <div>
@@ -85,7 +96,8 @@ function mapDispatchToProps (dispatch) {
   return {
     deletePost: (id) => dispatch(deletePost(id)),
     selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
-    loadComments: (comments) => dispatch(loadComments(comments))
+    loadComments: (comments) => dispatch(loadComments(comments)),
+    updatePostVote: (id, option) => dispatch(updatePostVote(id, option))
   }
 }
 

@@ -104,3 +104,25 @@ export const deleteComment = (id) =>
       'Content-Type': 'application/json'
     }
   })
+
+// API to update the votescore for posts
+export const updatePostVote = (id, option) => 
+  fetch(`${api}/posts/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({'option': option})
+  })
+
+// API to update the votescore for comments
+export const updateCommentVote = (id, option) => 
+  fetch(`${api}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({'option': option})
+  })

@@ -2,13 +2,13 @@ import React from 'react'
 import { getSocialDate } from '../utils/helpers'
 import { Well, Row, Col } from 'react-bootstrap'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 import ArrowUp from 'react-icons/lib/fa/angle-up'
 import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
-import { openAddComment, openEditComment, deleteComment } from '../actions'
+import { openAddComment, openEditComment, deleteComment, updateCommentVote } from '../actions'
 import AddEditComment from './AddEditComment'
 import * as ReadableAPI from '../utils/ReadableAPI'
 
@@ -45,6 +45,13 @@ class Comments extends React.Component {
     }
   }
 
+  updateVoteScore = function(e, id, option) {
+    e.preventDefault()
+    ReadableAPI.updateCommentVote(id, option).then(() => {
+      this.props.updateCommentVote(id, option)
+    })
+  }
+
   render() {
     const { comments } = this.props
     return(
@@ -60,9 +67,13 @@ class Comments extends React.Component {
           <Well key={comment.id}>
             <Row className="show-grid">
               <Col xs={1} className="column-flex">
-                <ArrowUp size={30}></ArrowUp>
+                <Link to='' onClick={(e) => this.updateVoteScore(e, comment.id, 'upVote')}>
+                  <ArrowUp size={30}></ArrowUp>
+                </Link>
                 <span className="vote">{comment.voteScore}</span>
-                <ArrowDown size={30}></ArrowDown>
+                <Link to='' onClick={(e) => this.updateVoteScore(e, comment.id, 'downVote')}>
+                  <ArrowDown size={30}></ArrowDown>
+                </Link>
               </Col>
               <Col xs={11} className="column-flex">
                 <div><p>
@@ -97,7 +108,8 @@ function mapDispatchToProps (dispatch) {
   return {
     openAddComment: (comment) => dispatch(openAddComment(comment)),
     openEditComment: (comment) => dispatch(openEditComment(comment)),
-    deleteComment: (id) => dispatch(deleteComment(id))
+    deleteComment: (id) => dispatch(deleteComment(id)),
+    updateCommentVote: (id, option) => dispatch(updateCommentVote(id, option))
   }
 }
 
