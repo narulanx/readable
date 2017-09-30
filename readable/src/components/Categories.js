@@ -9,10 +9,17 @@ import { connect } from 'react-redux'
 class Categories extends Component {
   componentDidMount() {
     if (this.props.selectedCategory === 'all') {
-      ReadableAPI.getAllPosts().then((data) => { 
-        this.props.loadPost(
-          data.filter((post) => (post.deleted === false))
-        ) 
+      ReadableAPI.getAllPosts().then((data) => {
+        const posts = data.filter((post) => (post.deleted === false))
+            .map((post) => {
+              return ReadableAPI.getComments(post.id).then((comment) => {
+                post.commentCount = comment.length
+                return post
+            })
+          })
+        Promise.all(posts).then((post) => {
+          this.props.loadPost(post)
+        })
       })
     } else {
       this.categoryClick(this.props.selectedCategory)

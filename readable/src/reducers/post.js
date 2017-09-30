@@ -18,7 +18,6 @@ export default function post(state = [], action) {
         return item.id !== action.id
       })
     case UPDATE_POST_VOTE:
-    console.log(state, action)
       return state.map((item, index) => {
         if (item.id === action.id) {
           let voteScore = action.option === 'upVote' ? item.voteScore + 1 : item.voteScore - 1

@@ -31,7 +31,6 @@ class PostDetails extends React.Component {
     if (window.confirm("Are you sure you want to delete this post?")) {
       const { id } = this.props.selectedPost
       this.props.deleteApiPost(id)
-      this.props.history.push('/')
     }
   }
 

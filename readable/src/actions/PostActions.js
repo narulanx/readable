@@ -87,7 +87,17 @@ export function fetchPosts(category) {
   return function (dispatch) {
     dispatch(clickCategory(category))
     return ReadableAPI.getCategoryPosts(category)
-      .then(json => dispatch(loadPost(json)))
+      .then(json => {
+        const posts = json.map((post) => {
+          return ReadableAPI.getComments(post.id).then((comment) => {
+            post.commentCount = comment.length
+            return post
+          })
+        })
+        Promise.all(posts).then((post) => {
+          dispatch(loadPost(post))
+        })
+      })
   }
 }
 
@@ -161,5 +171,14 @@ export function deleteApiPost (id) {
     return ReadableAPI.deletePost(id).then(() => {
       dispatch(deletePost(id))
     })
+  }
+}
+
+//Action to add comment count to a post
+export function addCommentCount(id, commentCount) {
+  return {
+    type: Types.ADD_COMMENT_COUNT,
+    id,
+    commentCount
   }
 }
