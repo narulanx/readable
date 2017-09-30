@@ -2,8 +2,7 @@ import React from 'react'
 import { Button, Modal, FormGroup, FormControl} from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { updateComment, addComment, editComment } from '../actions'
-import * as ReadableAPI from '../utils/ReadableAPI'
+import * as CommentActions from '../actions/CommentActions'
 import { guid } from '../utils/helpers'
 
 class AddEditComment extends React.Component {
@@ -48,18 +47,13 @@ class AddEditComment extends React.Component {
         comment.id = guid()
         comment.timestamp = Math.floor(Date.now())
         comment.parentId = this.props.selectedPost.id
-        ReadableAPI.createComment(comment).then((data) => {
-          this.props.addComment(data)
-          this.props.onCloseComment()
-        })
+        this.props.createApiComment(comment)
       } else if (this.props.type === 'edit') {
         const comment = this.props.addEditComment
         comment.timestamp = Math.floor(Date.now())
-        ReadableAPI.editComment(comment.id, comment).then((data) => {
-          this.props.editComment(comment)
-          this.props.onCloseComment()
-        })
+        this.props.editApiComment(comment)
       }
+      this.props.onCloseComment()
     }
   }
 
@@ -99,9 +93,9 @@ function mapStateToProps ({ addEditComment, selectedPost }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    updateComment: (name, value) => dispatch(updateComment(name, value)),
-    addComment: (comment) => dispatch(addComment(comment)),
-    editComment: (comment) => dispatch(editComment(comment))
+    updateComment: (name, value) => dispatch(CommentActions.updateComment(name, value)),
+    createApiComment: (comment) => dispatch(CommentActions.createApiComment(comment)),
+    editApiComment: (comment) => dispatch(CommentActions.editApiComment(comment))
   }
 }
 

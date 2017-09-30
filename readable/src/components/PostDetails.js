@@ -7,7 +7,8 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
-import { deletePost, selectPost, loadComments, updatePostVote } from '../actions'
+import * as PostActions from '../actions/PostActions'
+import { loadComments } from '../actions/CommentActions'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import * as ReadableAPI from '../utils/ReadableAPI'
@@ -29,18 +30,14 @@ class PostDetails extends React.Component {
   deletePost = function() {
     if (window.confirm("Are you sure you want to delete this post?")) {
       const { id } = this.props.selectedPost
-      ReadableAPI.deletePost(id).then(() => {
-        this.props.deletePost(id)
-        this.props.history.push('/')
-      })
+      this.props.deleteApiPost(id)
+      this.props.history.push('/')
     }
   }
 
   updateVoteScore = function(e, id, option) {
     e.preventDefault()
-    ReadableAPI.updatePostVote(id, option).then(() => {
-      this.props.updatePostVote(id, option)
-    })
+    this.props.updateApiPostVote(id, option)
   }
 
   render() {
@@ -94,10 +91,10 @@ function mapStateToProps ({ selectedPost }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    deletePost: (id) => dispatch(deletePost(id)),
-    selectPost: (selectedPost) => dispatch(selectPost(selectedPost)),
+    deleteApiPost: (id) => dispatch(PostActions.deleteApiPost(id)),
+    selectPost: (selectedPost) => dispatch(PostActions.selectPost(selectedPost)),
     loadComments: (comments) => dispatch(loadComments(comments)),
-    updatePostVote: (id, option) => dispatch(updatePostVote(id, option))
+    updateApiPostVote: (id, option) => dispatch(PostActions.updateApiPostVote(id, option))
   }
 }
 

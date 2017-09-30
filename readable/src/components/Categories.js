@@ -3,14 +3,14 @@ import { Button } from 'react-bootstrap'
 import { capitalize } from '../utils/helpers'
 import { withRouter } from 'react-router-dom'
 import * as ReadableAPI from '../utils/ReadableAPI'
-import { loadPost } from '../actions'
+import { loadPost, fetchPosts } from '../actions/PostActions'
 import { connect } from 'react-redux'
 
 class Categories extends Component {
   componentDidMount() {
     if (this.props.selectedCategory === 'all') {
       ReadableAPI.getAllPosts().then((data) => { 
-        this.props.loadPosts(
+        this.props.loadPost(
           data.filter((post) => (post.deleted === false))
         ) 
       })
@@ -20,11 +20,7 @@ class Categories extends Component {
   }
 
   categoryClick(category) {
-    ReadableAPI.getCategoryPosts(category).then((data) => {
-      this.props.loadPosts(
-        data.filter((post) => (post.deleted === false))
-      ) 
-    })
+    this.props.fetchPosts(category)
     this.props.history.push(`/category/${category}`)
   }
 
@@ -44,10 +40,4 @@ class Categories extends Component {
   }
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    loadPosts: (data) => dispatch(loadPost(data))
-  }
-}
-
-export default withRouter(connect(null, mapDispatchToProps)(Categories))
+export default withRouter(connect(null, {loadPost, fetchPosts})(Categories))

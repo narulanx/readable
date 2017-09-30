@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, FormGroup, FormControl, Grid} from 'react-bootstrap'
-import { updatePost, editPost, addPost, loadCategories, openEditPost } from '../actions'
+import * as PostActions from '../actions/PostActions'
+import * as CategoryActions from '../actions/CategoryActions'
 import { capitalize } from '../utils/helpers'
 import * as ReadableAPI from '../utils/ReadableAPI'
 import { guid } from '../utils/helpers'
@@ -64,15 +65,11 @@ class AddEditPost extends React.Component {
         const post = this.props.addEditPost
         post.id = guid()
         post.timestamp = Math.floor(Date.now())
-        ReadableAPI.createPost(post).then((data) => {
-          this.props.addPost(data)
-        })
+        this.props.createApiPost(post)
         this.props.history.push('/')
       } else if (this.props.type === 'edit') {
         const post = this.props.addEditPost
-        ReadableAPI.editPost(post.id, post).then((data) => {
-          this.props.editPost(post)
-        })
+        this.props.editApiPost(post)
         this.props.history.push(`/post/${post.id}`)
       }
     }
@@ -121,11 +118,11 @@ function mapStateToProps ({ addEditPost, categories }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    updatePost: (name, value) => dispatch(updatePost(name, value)),
-    editPost: (post) => dispatch(editPost(post)),
-    addPost: (post) => dispatch(addPost(post)),
-    openEditPost: (post) => dispatch(openEditPost(post)),
-    loadCategories: (categories) => dispatch(loadCategories(categories))
+    updatePost: (name, value) => dispatch(PostActions.updatePost(name, value)),
+    editApiPost: (post) => dispatch(PostActions.editApiPost(post)),
+    createApiPost: (post) => dispatch(PostActions.createApiPost(post)),
+    openEditPost: (post) => dispatch(PostActions.openEditPost(post)),
+    loadCategories: (categories) => dispatch(CategoryActions.loadCategories(categories))
   }
 }
 

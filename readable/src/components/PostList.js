@@ -6,8 +6,7 @@ import ArrowUp from 'react-icons/lib/fa/angle-up'
 import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import { connect } from 'react-redux'
-import * as ReadableAPI from '../utils/ReadableAPI'
-import { updatePostVote } from '../actions'
+import { updateApiPostVote } from '../actions/PostActions'
 
 class PostList extends React.Component {
   sortPost = function(post, sortMethod) {
@@ -24,9 +23,7 @@ class PostList extends React.Component {
 
   updateVoteScore = function(e, id, option) {
     e.preventDefault()
-    ReadableAPI.updatePostVote(id, option).then(() => {
-      this.props.updatePostVote(id, option)
-    })
+    this.props.updateApiPostVote(id, option)
   }
 
   render() {
@@ -71,10 +68,4 @@ function mapStateToProps ({ post }) {
   }
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    updatePostVote: (id, option) => dispatch(updatePostVote(id, option))
-  }
-}
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostList))
+export default withRouter(connect(mapStateToProps, {updateApiPostVote})(PostList))

@@ -8,7 +8,7 @@ import ArrowDown from 'react-icons/lib/fa/angle-down'
 import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
-import { openAddComment, openEditComment, deleteComment, updateCommentVote } from '../actions'
+import * as CommentActions from '../actions/CommentActions'
 import AddEditComment from './AddEditComment'
 import * as ReadableAPI from '../utils/ReadableAPI'
 
@@ -39,17 +39,13 @@ class Comments extends React.Component {
 
   deleteComment(id) {
     if (window.confirm("Are you sure you want to delete this comment?")) {
-      ReadableAPI.deleteComment(id).then(() => {
-        this.props.deleteComment(id)
-      })
+      this.props.deleteApiComment(id)
     }
   }
 
   updateVoteScore = function(e, id, option) {
     e.preventDefault()
-    ReadableAPI.updateCommentVote(id, option).then(() => {
-      this.props.updateCommentVote(id, option)
-    })
+    this.props.updateApiCommentVote(id, option)
   }
 
   render() {
@@ -106,10 +102,10 @@ function mapStateToProps ({ comments }) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    openAddComment: (comment) => dispatch(openAddComment(comment)),
-    openEditComment: (comment) => dispatch(openEditComment(comment)),
-    deleteComment: (id) => dispatch(deleteComment(id)),
-    updateCommentVote: (id, option) => dispatch(updateCommentVote(id, option))
+    openAddComment: (comment) => dispatch(CommentActions.openAddComment(comment)),
+    openEditComment: (comment) => dispatch(CommentActions.openEditComment(comment)),
+    deleteApiComment: (id) => dispatch(CommentActions.deleteApiComment(id)),
+    updateApiCommentVote: (id, option) => dispatch(CommentActions.updateApiCommentVote(id, option))
   }
 }
 

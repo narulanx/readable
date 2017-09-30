@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { openAddPost } from '../actions'
+import { openAddPost } from '../actions/PostActions'
 import { Navbar, Nav, NavItem } from 'react-bootstrap'
 import { Link, withRouter } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
@@ -29,10 +29,4 @@ class Header extends Component {
   }
 }
 
-function mapDispatchToProps (dispatch) {
-  return {
-    openAddPost: () => dispatch(openAddPost())
-  }
-}
-
-export default withRouter(connect(null, mapDispatchToProps)(Header))
+export default withRouter(connect(null, {openAddPost})(Header))
