@@ -1,4 +1,4 @@
-import { SELECT_POST, EDIT_POST, UPDATE_POST_VOTE } from '../actions/types'
+import { SELECT_POST, EDIT_POST, UPDATE_POST_VOTE, DELETE_POST } from '../actions/types'
 
 export default function selectedPost(state = {}, action) {
   switch(action.type) {
@@ -19,6 +19,8 @@ export default function selectedPost(state = {}, action) {
         ...state,
         'voteScore': voteScore
       }
+    case DELETE_POST:
+      return {}
     default:
       return state
   }

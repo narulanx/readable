@@ -7,6 +7,7 @@ import User from 'react-icons/lib/fa/user'
 import Edit from 'react-icons/lib/fa/edit'
 import Trash from 'react-icons/lib/fa/trash-o'
 import Comments from './Comments'
+import PageNotFound from './PageNotFound'
 import * as PostActions from '../actions/PostActions'
 import { loadComments } from '../actions/CommentActions'
 import { connect } from 'react-redux'
@@ -20,7 +21,9 @@ class PostDetails extends React.Component {
 
   componentDidMount() {
     ReadableAPI.getPostDetails(this.props.postId).then((data) => {
-      this.props.selectPost(data) 
+      if(!data.error) {
+        this.props.selectPost(data) 
+      }
     })
     ReadableAPI.getComments(this.props.postId).then((data) => {
       this.props.loadComments(data) 
@@ -42,6 +45,8 @@ class PostDetails extends React.Component {
   render() {
     const { selectedPost } = this.props
     return(
+      Object.keys(selectedPost).length === 0 ?
+      <PageNotFound /> :
       <Grid>
         <Row className="show-grid">
           <Col xs={12}>
