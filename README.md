@@ -73,7 +73,7 @@ The application has four views:
   * Identical to the default view, but filtered to only include posts with the selected category
 
 - Post Detail View
-  * Shows the details of a post, including: Title, Body, Author, timestamp, and vote score
+  * Shows the details of a post, including: Title, Body, Author, timestamp, comment count and vote score
   * Lists all of the comments for that post, ordered by voteScore (highest first)
   * Has controls to edit or delete the post
   * Has a control to add a new comment
@@ -98,6 +98,10 @@ Below are the dependencies used in the project -
 - "react-dom": "^15.6.1",
 - "react-dropdown": "^1.3.0",
 - "react-icons": "^2.2.5",
+- "react-redux": "^5.0.6",
+- "react-router-bootstrap": "^0.24.4",
 - "react-router-dom": "^4.2.2",
 - "react-scripts": "1.0.13",
-- "react-select": "^1.0.0-rc.7"`
+- "react-select": "^1.0.0-rc.7"`,
+- "redux": "^3.7.2",
+- "redux-thunk": "^2.2.0"
